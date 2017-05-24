@@ -8,7 +8,7 @@ class UserService{
     }
   }
   submitRegistration(attributes){
-    // This is mocking the back end call to the server for now
+    attributes['authToken'] = '111-222-333'
     setTimeout(()=>{
       updateUser(attributes)
     },1000)

@@ -1,29 +1,56 @@
 import React, { Component } from 'react'
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Header from './components/Header'
 import Home from './routes/Home'
 import UserDetail from './routes/UserDetail'
 import UserRegistration from './routes/UserRegistration'
 import Login from './routes/Login'
+import UserStore from './stores/UserStore'
 
 
 class App extends Component {
+  constructor(props){
+  super(props)
+  this.state = {}
+  this.updateLoginStatus = this.updateLoginStatus.bind(this)
+}
+
+componentWillMount(){
+  UserStore.on('change', this.updateLoginStatus)
+}
+
+componentWillUnmount(){
+  UserStore.removeListener('change', this.updateLoginStatus)
+}
+
+updateLoginStatus(){
+  this.setState({isLoggedIn: UserStore.isLoggedIn()})
+}
   render() {
     return (
       <Router>
         <div>
-          <Header />
+          <Header
+            isLoggedIn={this.state.isLoggedIn}
+            handleLogout={this.handleLogout}
+          />
           <div className='container'>
             <div className='row'>
               <div className='col-xs-6 col-xs-offset-3'>
-                <Route 
-                  exact 
-                  path="/" 
+                <Route
+                  exact
+                  path="/"
                   component={Home}
                 />
                 <Route
-                  path="/register"
-                  component={UserRegistration} 
+                path="/register"
+                render={()=>(
+                  this.state.isLoggedIn ? (
+                    <Redirect to='/' />
+                  ) : (
+                    <UserRegistration />
+                  )
+                )}
                 />
                 <Route
                   path="/user-detail"
@@ -41,5 +68,6 @@ class App extends Component {
     );
   }
 }
+
 
 export default App;

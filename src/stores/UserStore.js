@@ -6,6 +6,10 @@ class UserStore extends EventEmitter{
     super()
     this.fields = {}
   }
+  
+  isLoggedIn(){
+  return this.fields.authToken != null
+  }
 
   getFields(){
     return this.fields
