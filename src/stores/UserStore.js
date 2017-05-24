@@ -18,7 +18,7 @@ class UserStore extends EventEmitter{
 
   handleActions(action){
     switch(action.type){
-      case("CREATE_USER"):{
+      case("UPDATE_USER"):{
         this.updateUser(action.attributes)
         break
       }
